@@ -1,5 +1,7 @@
 package com.example.debugging_challenge
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var listsRecyclerView: RecyclerView
     private lateinit var fabButton: FloatingActionButton
     private lateinit var alertDialogSubmitBtn: Button
@@ -30,6 +33,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fabButton = findViewById(R.id.fabBtn)
+
+        sharedPreferences = this.getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
+        getListFromSharedPreferences()
         setupRecyclerView()
 
 
@@ -61,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
                     //Add single entry list to Global list
                     arrayListOfCountriesAndCapitals.add(singleUserEntryList)
+                    saveListInSharedPreferences()
                 }
 
                 alertDialog.dismiss()
@@ -86,6 +95,36 @@ class MainActivity : AppCompatActivity() {
         listsRecyclerView.adapter =
             ListSelectionRecyclerViewAdapter(this, arrayListOfCountriesAndCapitals)
     }
+
+    fun getListFromSharedPreferences() {
+        arrayListOfCountriesAndCapitals = convertStringToArray(sharedPreferences.getString("myList", "")!!)
+    }
+
+    fun saveListInSharedPreferences() {
+        with(sharedPreferences.edit()) {
+            putString("myList", convertArrayToString(arrayListOfCountriesAndCapitals))
+            apply()
+        }
+    }
+
+    fun convertArrayToString(arr: ArrayList<ArrayList<String>>) : String {
+        var arrString = arrayListOf<String>()
+        for (i in arr) {
+            arrString.add( i.joinToString ("*") )
+        }
+        return arrString.joinToString (",")
+    }
+    fun convertStringToArray(str: String ) : ArrayList<ArrayList<String>> {
+        val rows = str.split(",")
+
+        val matrix = ArrayList<ArrayList<String>>()
+        for (row in rows) {
+            matrix.add(ArrayList(row.split("*")))
+        }
+        return matrix
+    }
+
+
 }
 
 /*
