@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Debug2</string>
+    <string name="capital_string">Capital</string>
+    <string name="country_string">Country</string>
+    <string name="sn_string">S/N</string>
+    <string name="enter_country_capital">Enter Country Capital</string>
+    <string name="enter_country_name">Enter Country Name</string>
+    <string name="submit">Submit</string>
+    <string name="preference_file_key">com.example.debug.PREFERENCE_FILE_KEY</string>
+</resources>
